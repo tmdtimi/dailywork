@@ -34,4 +34,36 @@ while(left<=pivot) left++;
 ![](../pics/sort6.png)
 
 
+	    public static void sort(int[] nums,int left,int right){
+        if(left<right){
+        int patition=getPivot(nums,left,right);
+        sort(nums,left,patition-1);
+        sort(nums,patition+1,right);
+        }
 
+    }
+
+    public static int getPivot(int []nums,int left,int right){
+        int pivot=left;
+
+        while(left<right){
+            while(nums[right]>=nums[pivot] && left<right){
+                right--;
+            }
+            while(nums[left]<=nums[pivot] && left<right){
+                left++;
+            }
+            if(left<right){
+                int temp=nums[left];
+                nums[left]=nums[right];
+                nums[right]=temp;
+            }            
+        }
+        int temp=nums[pivot];
+        nums[pivot]=nums[left];
+        nums[left]=temp;
+        pivot=left;
+
+        return pivot;
+
+    }
