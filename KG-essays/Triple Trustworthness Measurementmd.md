@@ -22,7 +22,7 @@ model achieved significant and consistent improvements.
 KGTtm[22]提出了一个交错的神经网络，最上层是三种不同的置信度评估单元，这些评估器单元的输出形成了低级融合装置的输入。融合器是一个多层感知机，最终为每个三元组输出最终的可信度。	
 
 
-![Alt pic] (https://github.com/tmdtimi/repo_pic/blob/master/Triple%20Trustworthiness%20Measurement%20for%20Knowledge%20Graph/QQ%E6%88%AA%E5%9B%BE20210505123949.png)
+![Alt pic](https://github.com/tmdtimi/repo_pic/blob/master/Triple%20Trustworthiness%20Measurement%20for%20Knowledge%20Graph/QQ%E6%88%AA%E5%9B%BE20210505123949.png)
 
 
 
