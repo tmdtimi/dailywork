@@ -7,7 +7,7 @@
 
 所以，小灰在内存中创建了一个哈希表作为缓存，每次查找一个用户的时候先在哈希表中查询，以此提高访问性能。
 
-![](../pics/LRU1.png)
+![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E7%AE%97%E6%B3%95/pics/LRU1.png)
 
 
 内存溢出
