@@ -140,7 +140,7 @@ Resize可能出现环形链表  进入死循环
 
 5：从任一节点到每个叶子节点的所有路径都有相同的黑色节点数	
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/tree1.png)
+![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/Tree1.png)
 
 
 当红黑树插入节点，破坏相应规则时，可以采取两种措施维持树的平衡
