@@ -1,7 +1,7 @@
 ##缓存
 
 
-![](../pics/a4.png)
+![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E7%BC%93%E5%AD%98/pics/a4.png)
 
 
 使用空间换时间 -- 二八定律：80%的数据访问集中在20%的数据上
@@ -56,7 +56,7 @@
 1. Cache-Aside
 
 
-![](../pics/a2.png)
+![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E7%BC%93%E5%AD%98/pics/a2.png)
 
 	
 读数据，先从缓存读，如果cache hit直接返回，没命中则从数据源获取，并更新缓存
@@ -64,7 +64,7 @@
 写数据，先更新数据源，然后删除该缓存，下一次读此数据必然cache miss,然后触发回源。
 
 
-![](../pics/a1.png)
+![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E7%BC%93%E5%AD%98/pics/a1.png)
 
 缺点：
 
@@ -95,8 +95,7 @@
 
 	回写式，数据写入缓存即可返回，缓存内部会异步的去更新数据源，这样好处是写操作特别快，因为只需要更新缓存。并且缓存内部可以合并对相同数据项的多次更新，但是带来的问题就是数据不一致，可能发生写丢失。
 
-
-![](../pics/a3.png)
+![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E7%BC%93%E5%AD%98/pics/a3.png)
 	
 ### 缓存雪崩	
 
