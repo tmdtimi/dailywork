@@ -41,7 +41,7 @@ while(left<=pivot) left++;
         sort(nums,patition+1,right);
         }
 
-    }
+    	}
 
     public static int getPivot(int []nums,int left,int right){
         int pivot=left;
