@@ -140,6 +140,8 @@ Redis作为一个内存数据库。
 ###String
 String 是Redis的最基本的数据类型，可以理解为与 Memcached 一模一样的类型，一个key 对应一个 value。string 类型是二进制安全的，意思是 Redis 的 string 可以包含任何数据，比如图片或者序列化的对象，一个 redis 中字符串 value 最多可以是 512M。
 
+别偷懒
+
 
 
 ###List
