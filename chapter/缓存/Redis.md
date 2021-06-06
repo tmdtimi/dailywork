@@ -22,7 +22,7 @@ CAP理论是在设计分布式系统的过程中，处理数据一致性问题�
 CAP即：Consistence  	Availability  partition tolerance
 
 一致性  可用性  分区容错性
-
+cap
 ![](../pics/c2.png)
 
 一个分布式系统，不可能同时做到这三点
