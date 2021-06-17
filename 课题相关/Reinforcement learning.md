@@ -106,3 +106,4 @@ Q-learning获得Qtable的方法是通过基于Bellman equation不断迭代更新
 	3. 对动作a，更新target；其他动作target不变
 	4. backpropagation 依据每个动作的target和prediction，反向传播更新参数
 
+
