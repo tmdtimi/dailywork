@@ -236,21 +236,99 @@ user:id {filed}
 
 getset name wu  (如果不存在返回null . 如果存在 先返回旧值 再设置新值) 
 
-redis:计数器  对象缓存
+redis:计数器  对象缓存 
 
 ###List
+
+List:列表  相当于一个双向链表 左右插入 前后插入
+
+所有list操作都是l开头
+
+LPUSH list one  放在左头部 / LRANGE list 0 1 查看范围  / RPUSH list one 放在右尾部 / LPOP list 
+
+lindex list 0 查看索引出值 / Llen list长度 / lrem list 1 one 移除1个指定值 / ltrim list 1 2 截断
+
+rpoplpush list otherlist 移动 / EXITS list / lset list 1 other 替换当前下标值 /linsert list after one two 插入值
+
 ###Set
+
+Set: 值不重复
+
+sadd set "hello" / smembers set / sismember set wubo / scard set 获取set集合个数 / srem set wubo 移除 / 
+
+srandmember set 1 随机抽取一个元素 / spop set / smove set1 set2 "wubo" 移动指定元素到另一个集合 / sdiff set1 set2 
+
+sinter set1 set2 交集 / sunion set1 set2 并集  
+
 ###Hash
+
+Hash: key-Map集合
+
+hset hash key value / hget hash key / hmset hash k1 v1 k2 v2 / hmget hash k1 k2 / hgetall hash / hdel set k1
+
+hlen set / hexits hash key1 / hkeys hash / hvals hash / hincrby hash key1 1 给value加1 / hsetnx set key1 value1 /
+
+hash更适合对象的存储、String更适合字符串
+
 ###Zset
+
+Zset:在set的基础上，增加了一个值。 score  有序集合。
+
+zset set score v1  / zrange set 0 -1 / zrangebyscore set 0 1 按score排序 / zcard set / zrem set 1
+
+zrevrange key 0 -1 降序
+
+
 ##三种特殊数据类型
 ###geo
 ###hyperloglog
 ###bitmap
+
+
+
+##事务
+
+Redis单条命令是保证原子性的，但事务是不保证原子性的。
+
+Redis事务：一组命令的集合，将多个命令打包，这些命令会被顺序的添加到队列中，并按顺序执行这些命令。
+
+Redis事务中没有像Mysql关系型数据库事务隔离级别的概念，不能保证原子性操作，也没有像Mysql那样执行事务失败会进行回滚操作
+
+开始事务（MULTI）
+命令入队
+执行事务（EXEC）
+撤销事务（DISCARD ）
+
+命令 功能描述 MULTI 「事务开始的命令」，执行该命令后，后面执行的对Redis数据类型的「操作命令都会顺序的放进队列中」，
+
+等待执行EXEC命令后队列中的命令才会被执行 
+
+DISCARD 「放弃执行队列中的命令」，你可以理解为Mysql的回滚操作，「并且将当前的状态从事务状态改为非事务状态」。
+
+EXEC 执行该命令后「表示顺序执行队列中的命令」，执行完后并将结果显示在客户端，「将当前状态从事务状态改为非事务状态」。
+
+若是执行该命令之前有key被执行WATCH命令并且又被其它客户端修改，那么就会放弃执行队列中的所有命令，在客户端显示报错信息，若是没有修改就会执行队列中的所有命令。
+
+WATCH key 表示指定监视某个key，「该命令只能在MULTI命令之前执行」，如果监视的key被其他客户端修改，「EXEC将会放弃执行队列中的所有命令」 UNWATCH 「取消监视之前通过WATCH 命令监视的key」，通过执行EXEC 、DISCARD 两个命令之前监视的key也会被取消监视
+
+**开始事务**
+MULTI 命令表示事务的开始，当看到OK表示已经进入事务的状态：
+
+该命令执行后客户端会将「当前的状态从非事务状态修改为事务状态」，这一状态的切换是将客户端的flags属性中打开REDIS_MULTI来完成的，该命令可以理解关系型数据库Mysql的BEGIN TRANCATION语句：
+
+**命令入队**
+
+执行完MULTI命令后，后面执行的操作Redis五种类型的命令都会按顺序的进入命令队列中，该部分也是真正的业务逻辑的部分。
+
+Redis客户端的命令执行后若是当前状态处于事务状态命令就会进入队列中，并且返回QUEUED字符串，表示该命令已经进入了命令队列中，并且「事务队列是以先进先出（FIFO）的方式保存入队的命令」的。
+
+
+
+
 ##配置详解
 ##Redis持久化
 ###RDB
 ###AOF
-##事务操作
 ##订阅发布
 ##主从复制
 ##哨兵模式
