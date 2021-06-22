@@ -290,43 +290,127 @@ zrevrange key 0 -1 降序
 
 Redis单条命令是保证原子性的，但事务是不保证原子性的。
 
+
+![](../pics/r1.png)
+
+Redis事务是通过MULTI、EXEC、DISCARD、WATCH这四个命令完成的。
+
 Redis事务：一组命令的集合，将多个命令打包，这些命令会被顺序的添加到队列中，并按顺序执行这些命令。
 
-Redis事务中没有像Mysql关系型数据库事务隔离级别的概念，不能保证原子性操作，也没有像Mysql那样执行事务失败会进行回滚操作
+不能回滚。
 
-开始事务（MULTI）
-命令入队
-执行事务（EXEC）
-撤销事务（DISCARD ）
+1：MULTI 用于标记事物块的开始，Redis会将后续的命令逐个的放入队列中，然后使用EXEC命令原子化执行这个命令序列。
 
-命令 功能描述 MULTI 「事务开始的命令」，执行该命令后，后面执行的对Redis数据类型的「操作命令都会顺序的放进队列中」，
+2：EXEC 在一个事物中执行所有先前放入队列的命令，然后恢复正常的连接状态。
 
-等待执行EXEC命令后队列中的命令才会被执行 
+3：DISCARD 清除先前在一个事务中放入队列的命令，然后恢复正常的连接状态。
 
-DISCARD 「放弃执行队列中的命令」，你可以理解为Mysql的回滚操作，「并且将当前的状态从事务状态改为非事务状态」。
+4：WATCH：当某个事务需要按条件执行时，就要使用这个命令给指定的键设置为受监控的状态。
 
-EXEC 执行该命令后「表示顺序执行队列中的命令」，执行完后并将结果显示在客户端，「将当前状态从事务状态改为非事务状态」。
+当被监控的数据发生改变后，开启的事务执行是无法成功的，只有被监控的数据不发生变化，事务才能正常执行。
 
-若是执行该命令之前有key被执行WATCH命令并且又被其它客户端修改，那么就会放弃执行队列中的所有命令，在客户端显示报错信息，若是没有修改就会执行队列中的所有命令。
+UNWATCH:清除先前为一个事务监控的键
 
-WATCH key 表示指定监视某个key，「该命令只能在MULTI命令之前执行」，如果监视的key被其他客户端修改，「EXEC将会放弃执行队列中的所有命令」 UNWATCH 「取消监视之前通过WATCH 命令监视的key」，通过执行EXEC 、DISCARD 两个命令之前监视的key也会被取消监视
+事务失败处理：
 
-**开始事务**
-MULTI 命令表示事务的开始，当看到OK表示已经进入事务的状态：
+1：Redis语法错误（编译期错误）：在一个事务中，当命令出现错误时，后续命令正确依旧是可以添加到命令队列中去得，但是使用 EXEC 命令执行命令队列的时候，就会报错。----事务中所有的命令不会被执行
 
-该命令执行后客户端会将「当前的状态从非事务状态修改为事务状态」，这一状态的切换是将客户端的flags属性中打开REDIS_MULTI来完成的，该命令可以理解关系型数据库Mysql的BEGIN TRANCATION语句：
+2：Redis类型错误（运行期异常） ： 事务队列中存在语法性错误，则执行命令时，其他命令是可以被执行的，错误命令就抛出异常。
 
-**命令入队**
+---事务不保证原子性。  不支持事务回滚---- 在开发阶段错误可被预见  性能要求。
 
-执行完MULTI命令后，后面执行的操作Redis五种类型的命令都会按顺序的进入命令队列中，该部分也是真正的业务逻辑的部分。
+**乐观锁、悲观锁**
 
-Redis客户端的命令执行后若是当前状态处于事务状态命令就会进入队列中，并且返回QUEUED字符串，表示该命令已经进入了命令队列中，并且「事务队列是以先进先出（FIFO）的方式保存入队的命令」的。
+悲观锁：认为出现并发问题的可能性较大，所以在操作前加锁。
+
+乐观锁：认为出现并发问题的可能性比较小，比较乐观。这时不需要加锁，只需要在执行修改操作的时候，比较一下原来的数据是否发生变化，如果没有变化就修改，有变化就不修改。
+
+redis提供了watch命令，可以监控修改数据时，数据是否被其他线程修改过，如果修改过，则本次修改失败，如果没有修改过，则修改成功。其实watch命令就可以看做是redis的乐观锁的实现。
+
+![](../pics/r2.png)
+
+此时另一终端修改acc1的值，则在exec后会导致此事务失败。 并没有阻塞其他线程修改，redis事务无隔离性。
+
+
+##Springboot集成redis
+
+
+1:pom.xml导入依赖
+
+	<!--redis依赖包-->
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-data-redis</artifactId>
+      </dependency>
+
+2：在application.yml文件中配置redis连接信息
+
+	#redis配置
+	#Redis服务器地址
+	spring.redis.host=127.0.0.1
+	#Redis服务器连接端口
+	spring.redis.port=6379
+	#Redis数据库索引（默认为0）
+	spring.redis.database=0 
+
+3：注入RedisTemplate操作
+
+	@SpringBootTest
+	class SpringbootdemoApplicationTests {
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate; //操作key-value都是字符串，最常用
+
+    @Test
+    public void test01(){
+        //字符串操作
+        stringRedisTemplate.opsForValue().append("msg","coder");
+
+        //列表操作
+        stringRedisTemplate.opsForList().leftPush("mylist","1");
+        stringRedisTemplate.opsForList().leftPush("mylist","2");
+    }
+	}
+
+4：可以自定义序列化类，将存在Redis的对象序列化为JSON格式，防止乱码
+
+	@Configuration
+	@EnableAutoConfiguration
+	public class MyRedisConfig {
+    @Bean
+    public RedisTemplate<Object, User> redisTemplate(RedisConnectionFactory redisConnectionFactory){
+        RedisTemplate<Object, User> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+
+        Jackson2JsonRedisSerializer<User> ser = new Jackson2JsonRedisSerializer<>(User.class);
+        template.setDefaultSerializer(ser);
+        return template;
+    }
+	}
+
+5：可以写RedisUtil工具类相关方法
 
 
 
-
-##配置详解
 ##Redis持久化
+
+Redis是内存数据库，一旦Redis服务器进程退出或者运行Redis服务器的计算机停机，Redis服务器中的数据就会丢失。
+
+所以为了防止数据丢失，需要持久化。
+
+两种持久化方式： RDB持久化 和 AOF持久化
+
+RDB持久化： 将某个时间点上Redis中的数据保存到一个RDB文件中，所以RDB持久化也叫做快照持久化。
+
+RDF快照是一个全量备份，而AOF是增量备份。
+
+快照是内存数据的二进制序列化形式，存储上很紧凑。AOF是增量备份，记录的是内存数据修改的指令记录文本。
+
+
+
+
+
+
 ###RDB
 ###AOF
 ##订阅发布
