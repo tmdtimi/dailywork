@@ -51,7 +51,7 @@ a++包含三个操作：从主存中读取a的值、对a进行+1操作、把a重
 多个线程进行a++操作，有的线程已经+1了，但是没有刷进主存，其他线程就重新读取到了旧值，因此就造成了错误。
 
 
-所以在此采用JUC下的AtomicInteger类
+所以在此采用JUC下的AtomicInteger类  --cas
 
 
 
@@ -254,7 +254,7 @@ CopyOnWriteArrayList 线程安全，相对vector提高读操作的并发量
 
 
 
-
+**AtomicStampedReference**
 
 
 
