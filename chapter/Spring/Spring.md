@@ -6,11 +6,13 @@ Spring是一个分层架构，由7个模块组成。
 
 Spring的核心在于Spring 核心容器，可以在它的基础上整合其他模块，也可以整合第三方的框架。
 
+###IOC
+
 Spring通过核心容器来实现IOC  --依赖倒置原则
 
 IOC控制反转 ：将类得实例交给Spring容器进行管理，从而将类和类之间的关系解耦。 实现的方法是通过依赖注入。
 
-IOC:
+IOC: 对象的耦合，依赖程度降低 资源更加容易管理。
 
 1 .通过java config(@Component) 注解、xml的方式<bean> 配置bean
 
@@ -36,14 +38,128 @@ ClassPathXmlApplicationContext/AnnotationConfigApplicationContext  ApplicationCo
 
 BeanFactory：生产Bean 
 
-beanDefinition.setBeanClass(.class)  //设置原料
+beanDefinition.setBeanClass(.class)  //设置原料  --
 
 beanFactory.registerBeanDefinition(beanDefinition)  //注册到工厂中
 
 beanFactory.getBean(.class) //可以生产了
 
+BeanFactory  需要我们配置原料，registerBeanDefinition 注册入工厂才能生产。
+
 BeanFactory是低级容器，只是需要我们先配置一些原料才能生产Bean.
 
-AnnotationConfigApplicationContext(.xml) 直接将配置中的Bean自动加载成BeanDefinition原料，然后交给BeanFactory
+BeanFactory 适用于资源受限的设备作内嵌的组件生产Bean
+
+
+AnnotationConfigApplicationContext(@Component) ClassPathXmlApplicationContext（.xml）
+
+采用不同的读取方式直接将配置中的Bean自动加载成BeanDefinition原料，然后交给BeanFactory
+
+ApplicationContext自动配置了BeanDefinition生产原料 然后交给BeanFactory生产Bean
+
+
+BeanDenifition参数： ObjectClass , Scope作用范围 ，  LazyInit是否懒加载
+
+可以修改BeanDefinition参数来修改生产Bean的配置
+
+首先将每个Bean加载成BeanDefinition 的Map中 注册到BeanFactory 
+
+getBean通过BeanFactory生产Bean , 
+
+1.通过Class.newInstance(ObjectClass)反射实例化这个Bean
+
+2.实例化后进行属性注入 @AutoWired
+
+3.初始化 
+
+3.将Bean放入Map中。 Map<beanName,bean实例> ，这个Map成为一级缓存 或 单例池。
+
+
+
+加载配置文件，解析成BeanDefinition 放入Map里。
+
+当调用getBean的时候，从BeanDefinition所属的Map里，拿出Class对象进行实例化
+
+同时如果由依赖关系，将递归调用getBean方法，完成依赖注入。
+
+
+
+循环依赖问题：
+
+	Class A{
+		@Autowired
+		 B b;
+	}
+	
+	Class B{
+		@Autowired
+		 A a;
+	}
+
+
+
+在属性注入时会出现死循环。 - 使用三级缓存解决。
+
+
+singletonObjects 一级缓存，用于保存实例化、注入、初始化完成的bean实例
+
+earlySingletonObjects 二级缓存，用于保存实例化完成的bean实例
+
+singletonFactories 三级缓存，用于保存bean创建工厂，以便于后面扩展有机会创建代理对象。
+
+![](../pics/s2.png)
+
+
+扩展接口：
+
+
+BeanFactoryPostProcessor --修改BeanDefinition
+					
+
+BeanFactoryPostProcessor 子接口 BeanDefinitionRegisterPostProcessor - 提供BeanDefinition注册器
+
+
+BeanPostProcessor :  反射实例化、属性注入、初始化调用9次。
+
+
+
+###AOP:面向切面编程
+
+在不改变原有业务逻辑的情况下，增加了横切逻辑代码，实现解耦合，避免横切的代码逻辑重复。
+
+
+
+###配置
+
+注入方法： 构造器注入（指定参数）/ set方法注入（set参数，可以部分注入）
+
+**bean作用域：**
+
+singleton : 单例
+
+当一个 bean 的作用域为 singleton，那么Spring IoC容器中只会存在一个共享的 bean 实例，并且所有对 bean 的请求，只要 id 与该 bean 定义相匹配，则只会返回bean的同一实例。
+
+singleton 是单例类型(对应于单例模式)，就是在创建起容器时就同时自动创建了一个bean的对象，不管你是否使用，但我们可以指定Bean节点的 lazy-init=”true” 来延迟初始化bean，这时候，只有在第一次获取bean时才会初始化bean，即第一次请求该bean时才初始化。 每次获取到的对象都是同一个对象。
+
+@scope("singleton") 或 bean配置中<bean scope="singleton">
+
+prototype——多例 每次请求都会创建一个新的 bean 实例
+
+ prototype 作用域的 bean 会导致在每次对该 bean 请求（将其注入到另一个 bean 中，或者以程序的方式调用容器的 getBean() 方法）时都会创建一个新的 bean 实例
+
+
+request / session / global session三种作用域仅在基于web的应用中使用
+
+request:每一次HTTP请求都会产生一个新的bean，该bean仅在当前HTTP request内有效
+
+request只适用于Web程序，每一次 HTTP 请求都会产生一个新的bean，同时该bean仅在当前HTTP request内有效，当请求结束后，该对象的生命周期即告结束。	
+
+
+session——每一次HTTP请求都会产生一个新的 bean，该bean仅在当前 HTTP session 内有效
+
+在global session 作用域中定义的 bean 被限定于全局portlet Session的生命周期范围内。
+
+
+**Bean的生命周期**
 
 
