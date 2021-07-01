@@ -567,3 +567,5 @@
 当我们除去了一切不必要的人、事、物之后，留下来的便是真正值得花时间专注的，我们也会拥有更多思考的空间，因此只有极简主义才能给我们带来自由的、由自己掌控的人生。
 
 Constantly varied high intensity functional movements
+
+

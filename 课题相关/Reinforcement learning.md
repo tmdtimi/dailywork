@@ -167,5 +167,53 @@ Q-Learning的思想完全根据值迭代得到。然而面对无限的状态、�
 
 
 
+
 **Sarsa**
+
+
+![](../pics/sa4.png)
+
+
+单步更新：直到获得宝藏时，才为获得宝藏的上一步更新
+
+回合更新： 对所有步进行更新
+
+![](../pics/sa1.png)
+
+![](../pics/sa2.png)
+
+sarsa(0) :单步更新
+
+sarsa(1) :回合更新
+
+
+![](../pics/sa3.png)
+
+
+
+**DQN**
+
+传统的表格形式存在瓶颈。 状态 / action 过多，内存
+
+或者 将state / action 作为输入 最后得到 Q值  直接使用神经网络生成
+
+或 只输入 state 然后输出所有Q 选择最大Q
+
+![](../pics/nn1.png)
+
+![](../pics/nn2.png)
+
+
+
+
+**Playing Atari with Deep Reinforcement Learning**
+
+![](../pics/z1.png)
+
+
+
+
+
+
+
 
