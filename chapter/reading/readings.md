@@ -569,3 +569,10 @@
 Constantly varied high intensity functional movements
 
 
+get my one shot , or just die in vain
+
+痛苦如此持久，像蜗牛充满耐心地移动；快乐如此短暂，像兔子的尾巴掠过秋天的草原。
+
+生命是一场必输的战役。
+
+努力不是为了成功，努力是为了努力，走到哪一步算哪一步，死在半路也无怨无悔。

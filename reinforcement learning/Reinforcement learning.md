@@ -193,15 +193,62 @@ sarsa(1) :回合更新
 
 **DQN**
 
-传统的表格形式存在瓶颈。 状态 / action 过多，内存
+传统的表格形式存在瓶颈。 state / action 过多，内存    神经网络+Q learning
 
-或者 将state / action 作为输入 最后得到 Q值  直接使用神经网络生成
+将state / action 作为NN的输入值 最后得到 Q值  直接使用神经网络生成Q值
 
 或 只输入 state 然后输出所有Q 选择最大Q
 
 ![](../pics/nn1.png)
 
+只输入状态值，输出所有的动作对应的Q值，按照Qlearning的原则直接选取最大值的动作作为下一个动作。
+
 ![](../pics/nn2.png)
+
+
+DQN两大因素：能够提升DQN的效果
+
+Experience replay: DQN中有一个记忆库用于学习之前的经历，Q learning是一个off policy的离线学习方式，能学习当前经历过的，也能学习过去经历过的，所以每次DQN更新的时候，我们可以随机抽取之前的经历进行学习。随机抽取打乱了经历之间的相关性，也使得神经网络更新更有效率。
+
+Fixed Q-targets ： 也是一种打乱相关性的机理，
+
+![](../pics/nn3.png)
+
+
+
+单纯使用Q learning和神经网络 结果可能很难收敛
+
+所以采用了： 记忆库（用于重复学习） experience replay / 神经网络计算Q值 / 暂时冻结q_target参数（切断相关性） Fixed Q-targets
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -212,8 +259,23 @@ sarsa(1) :回合更新
 
 
 
+![](../pics/d1.png)
 
 
 
+![](../pics/z2.png)
+
+
+传统的方法为每一个action学习一个函数，而不是一个网络结构直接输出所有action的Q value
+
+
+输入信息预处理
+
+![](../pics/z3.png)
+
+
+![](../pics/z4.png)
+
+![](../pics/z5.png)
 
 
