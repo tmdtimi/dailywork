@@ -56,7 +56,7 @@
 1. Cache-Aside
 
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E7%BC%93%E5%AD%98/pics/a2.png)
+![Alt pic](../pics/a2.png)
 
 	
 读数据，先从缓存读，如果cache hit直接返回，没命中则从数据源获取，并更新缓存
