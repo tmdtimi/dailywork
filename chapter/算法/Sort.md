@@ -33,12 +33,11 @@ while(left<=pivot) left++;
 
 ![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E7%AE%97%E6%B3%95/pics/sort6.png)
 
-
-	    public static void sort(int[] nums,int left,int right){
+	public static void sort(int[] nums,int left,int right){
         if(left<right){
-        int patition=getPivot(nums,left,right);
-        sort(nums,left,patition-1);
-        sort(nums,patition+1,right);
+	        int patition=getPivot(nums,left,right);
+	        sort(nums,left,patition-1);
+	        sort(nums,patition+1,right);
         }
 
     	}
