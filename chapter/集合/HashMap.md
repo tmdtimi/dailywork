@@ -42,11 +42,11 @@ Node数组结构 初始长度16
 
 index=Hash("apple")=2
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/map1.png)
+![Alt pic](../pics/map1.png)
 
 如果index发生冲突 ----头插法
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/map2.png)
+![Alt pic](../pics/map2.png)
 
 
 
@@ -55,7 +55,7 @@ index=Hash("apple")=2
 index=Hash("apple")
 
 有hash冲突时，一个一个向下找
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/map3.png)
+![Alt pic](../pics/map3.png)
 
 头插法---后插入的元素被查找的可能性更大
 
@@ -97,9 +97,9 @@ index = HashCode（Key） & （Length - 1）
 
 **Rehash可能带来的线程不安全问题**
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/map4.png)
+![Alt pic](../pics/map4.png)
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/map5.png)
+![Alt pic](../pics/map5.png)
 
 
 
@@ -110,7 +110,7 @@ index = HashCode（Key） & （Length - 1）
 Resize可能出现环形链表  进入死循环
 
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/map6.png)
+![Alt pic](../pics/map6.png)
 
 
 
@@ -140,7 +140,7 @@ Resize可能出现环形链表  进入死循环
 
 5：从任一节点到每个叶子节点的所有路径都有相同的黑色节点数	
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/Tree1.png)
+![Alt pic](../pics/Tree1.png)
 
 
 当红黑树插入节点，破坏相应规则时，可以采取两种措施维持树的平衡
@@ -163,7 +163,7 @@ Resize可能出现环形链表  进入死循环
 但是性能----无论是读还是写 ， 都会给集合加上锁，导致同一时间其他操作阻塞
 
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/cm1.png)
+![Alt pic](../pics/cm1.png)
 
 
 CucurrentHashMap提出segment概念
@@ -172,12 +172,12 @@ segment相当于一个 HashMap对象
 
 segment也是一个 HashEntry数组， 每个HashEntry即是键值对，也是链表头节点
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/segment.png)
+![Alt pic](../pics/segment.png)
 
 CuncurrentHashMap在链表中有2的N次方个segment
 
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/CuncurrentHashMap.png)
+![Alt pic](../pics/CuncurrentHashMap.png)
 
 
 优势在于，采用了锁分段技术，每一格segment之间互补影响
@@ -185,17 +185,17 @@ CuncurrentHashMap在链表中有2的N次方个segment
 
 **1:不同Segment中可以并发写入**
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/w1.png)
+![Alt pic](../pics/w1.png)
 
 **2:同一个Segment中可以并发读写**
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/w2.png)
+![Alt pic](../pics/w2.png)
 
 
 **3:同一个Segment中并发写入**
 
 会被阻塞
 
-![Alt pic](https://github.com/tmdtimi/dailywork/blob/main/chapter/%E9%9B%86%E5%90%88/pics/w3.png)
+![Alt pic](../pics/w3.png)
 
 
 对同一个segment中的并发写入是需要加锁的
